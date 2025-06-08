@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Arquitetura do Texto: Guia Interativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            height: 150px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">A Arquitetura do Texto</h1>
+            <p class="text-lg text-stone-600">Um guia interativo para planejar a escrita e organizar seu pensamento.</p>
+        </header>
+
+        <main>
+  
+            
+            <section id="interactive-tool" class="text-center bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">Construa o Esqueleto de seu Texto</h2>
+                <p class="text-stone-600 mb-6 max-w-2xl mx-auto">Selecione um gênero textual para ver sua estrutura básica e comece a organizar suas ideias.</p>
+                <div class="max-w-md mx-auto mb-6">
+                    <label for="genre-select" class="block mb-2 font-semibold text-lg text-left">1. Escolha o Gênero Textual:</label>
+                    <select id="genre-select" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="selecione" selected>Selecione...</option>
+                        <option value="conto">Conto</option>
+                        <option value="noticia">Notícia</option>
+                        <option value="opiniao">Artigo de Opinião</option>
+                        <option value="receita">Receita</option>
+                        <option value="ensaio">Ensaio Argumentativo</option>
+                    </select>
+                </div>
+
+                <div id="skeleton-container" class="text-left">
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 pt-8 border-t border-stone-200">
+            <p class="text-stone-500">Guia Interativo desenvolvido a partir do projeto "A Arquitetura do Texto".</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const btnEf = document.getElementById('btn-ef');
+        const btnEm = document.getElementById('btn-em');
+        const contentEf = document.getElementById('content-ef');
+        const contentEm = document.getElementById('content-em');
+
+        const genreSelect = document.getElementById('genre-select');
+        const skeletonContainer = document.getElementById('skeleton-container');
+
+        let efChartInstance, emChartInstance;
+
+        const skeletons = {
+            conto: {
+                'Situação Inicial': 'Apresente os personagens principais, o cenário (onde e quando) e a atmosfera inicial da história.',
+                'Conflito / Problema': 'Introduza o evento ou problema que quebra a normalidade e dá início à trama principal.',
+                'Desenvolvimento / Clímax': 'Descreva a sequência de ações e eventos. O clímax é o ponto de maior tensão da história.',
+                'Desfecho / Resolução': 'Mostre como o conflito é resolvido e qual a nova situação dos personagens após os eventos.'
+            },
+            noticia: {
+                'Título (Manchete)': 'Curto, direto e chamativo. Deve resumir o fato principal.',
+                'Lide (1º Parágrafo)': 'Responda às perguntas essenciais: O quê? Quem? Quando? Onde? Como? Por quê?',
+                'Corpo da Notícia': 'Detalhe as informações apresentadas no lide, adicionando mais contexto, depoimentos e dados.',
+                'Contexto Adicional': 'Explique os antecedentes do fato ou as possíveis consequências.'
+            },
+            opiniao: {
+                'Introdução (Tese)': 'Apresente o tema e deixe clara a sua posição (sua tese) sobre o assunto.',
+                'Argumento 1 (com Provas)': 'Desenvolva seu primeiro argumento. Use dados, exemplos ou fatos para sustentá-lo.',
+                'Argumento 2 (com Provas)': 'Apresente um segundo argumento, também com sua respectiva comprovação.',
+                'Conclusão': 'Retome sua tese, sintetize os argumentos e proponha uma reflexão ou solução para o problema.'
+            },
+            receita: {
+                'Título': 'O nome do prato.',
+                'Ingredientes': 'Liste todos os ingredientes necessários com as quantidades exatas.',
+                'Modo de Preparo': 'Descreva o passo a passo do preparo de forma clara e sequencial.',
+                'Dicas Adicionais': 'Sugestões de serviço, variações ou dicas para o sucesso da receita.'
+            },
+            ensaio: {
+                'Introdução (Contextualização e Tese)': 'Apresente o tema de forma abrangente, delimite seu recorte e anuncie a tese que será defendida ao longo do texto.',
+                'Desenvolvimento 1 (Tópico Frasal e Análise)': 'Inicie o parágrafo com a ideia central. Desenvolva-a com repertório sociocultural, análise crítica e dados.',
+                'Desenvolvimento 2 (Contra-argumentação e Refutação)': 'Apresente um possível ponto de vista contrário e, em seguida, refute-o com argumentos sólidos para fortalecer sua tese.',
+                'Conclusão (Síntese e Reflexão)': 'Retome a tese, sintetize os pontos principais da argumentação e finalize com uma reflexão mais ampla ou uma proposta de intervenção social.'
+            }
+        };
+
+        function switchTab(activeBtn, inactiveBtn, activeContent, inactiveContent) {
+            activeBtn.classList.add('active');
+            inactiveBtn.classList.remove('active');
+            activeContent.classList.remove('hidden');
+            inactiveContent.classList.add('hidden');
+        }
+
+        btnEf.addEventListener('click', () => {
+            switchTab(btnEf, btnEm, contentEf, contentEm);
+        });
+
+        btnEm.addEventListener('click', () => {
+            switchTab(btnEm, btnEf, contentEm, contentEf);
+        });
+
+        function generateSkeleton(genre) {
+            skeletonContainer.innerHTML = '';
+            if (genre === 'selecione' || !skeletons[genre]) {
+                return;
+            }
+
+            const structure = skeletons[genre];
+            const form = document.createElement('form');
+            form.className = 'space-y-4';
+
+            Object.entries(structure).forEach(([title, description], index) => {
+                const div = document.createElement('div');
+                const label = document.createElement('label');
+                label.htmlFor = `field-${index}`;
+                label.className = 'block font-semibold text-lg';
+                label.textContent = `${index + 2}. ${title}`;
+
+                const p = document.createElement('p');
+                p.className = 'text-sm text-stone-500 mb-2';
+                p.textContent = description;
+
+                const textarea = document.createElement('textarea');
+                textarea.id = `field-${index}`;
+                textarea.rows = '3';
+                textarea.className = 'w-full p-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500';
+                textarea.placeholder = 'Comece a organizar suas ideias aqui...';
+
+                div.appendChild(label);
+                div.appendChild(p);
+                div.appendChild(textarea);
+                form.appendChild(div);
+            });
+
+            skeletonContainer.appendChild(form);
+        }
+
+        genreSelect.addEventListener('change', (e) => {
+            generateSkeleton(e.target.value);
+        });
+        
+        function createChart(canvasId, label, chartInstance) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const data = {
+                labels: ['Etapa 1: Intro', 'Etapa 2: Mapeamento', 'Etapa 3: Montagem', 'Etapa 4: Apresentação'],
+                datasets: [{
+                    label: 'Distribuição de Tempo (min)',
+                    data: [20, 40, 40, 20],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)',  // blue-500
+                        'rgba(16, 185, 129, 0.7)', // emerald-500
+                        'rgba(239, 68, 68, 0.7)',   // red-500
+                        'rgba(249, 115, 22, 0.7)',  // orange-500
+                    ],
+                    borderColor: [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(249, 115, 22, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            return new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + ' min';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.onload = function () {
+            efChartInstance = createChart('ef-chart', 'Ensino Fundamental', efChartInstance);
+            emChartInstance = createChart('em-chart', 'Ensino Médio', emChartInstance);
+        }
+
+    </script>
+</body>
+</html>
