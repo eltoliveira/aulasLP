@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Construtor de Esqueleto Textual</title>
+    <title>Construtor de Projeto de Texto</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@
 </head>
 <body class="text-stone-800 min-h-screen">
     <div class="max-w-4xl mx-auto p-6 sm:p-8">
-        <!-- Interactive Tool -->
+        <!-- parte interativa V3 -->
         <section class="bg-white p-8 rounded-2xl shadow-xl glass mb-12 mt-16">
             <div class="text-center mb-10">
                 <h2 class="text-4xl font-bold mb-4 text-blue-600">Construtor de Projeto de Texto</h2>
@@ -69,6 +69,8 @@
     <script>
         const genreSelect = document.getElementById('genre-select');
         const skeletonContainer = document.getElementById('skeleton-container');
+
+
         
         const skeletons = {
             conto: {
@@ -109,7 +111,7 @@
             if (genre === 'selecione' || !skeletons[genre]) {
                 skeletonContainer.innerHTML = `
                     <div class="text-center py-12 px-6 bg-blue-50 rounded-xl border border-blue-100">
-                        <p class="text-xl text-blue-700 font-medium">Escolha um gênero textual para começar</p>
+                        <p class="text-xl text-blue-700 font-medium">Escolha entre as opções para começar</p>
                         <p class="text-stone-500 mt-2">Sua estrutura aparecerá aqui automaticamente</p>
                     </div>
                 `;
