@@ -1,94 +1,76 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Arquitetura do Texto: Guia Interativo</title>
+    <title>Construtor de Esqueleto Textual</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f5f4; /* stone-100 */
+            background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
         }
-        .tab-button {
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .step-card {
             transition: all 0.3s ease;
         }
-        .tab-button.active {
-            background-color: #3b82f6; /* blue-500 */
-            color: white;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        .step-card:hover {
+            transform: scale(1.02);
         }
-        .content-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .content-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
-        }
-        .chart-container {
-            position: relative;
-            height: 150px;
-            width: 150px;
+        .glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
     </style>
 </head>
-<body class="text-stone-800">
-
-    <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">A Arquitetura do Texto</h1>
-            <p class="text-lg text-stone-600">Um guia interativo para planejar a escrita e organizar seu pensamento.</p>
-        </header>
-
-        <main>
-  
+<body class="text-stone-800 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6 sm:p-8">
+        <!-- Interactive Tool -->
+        <section class="bg-white p-8 rounded-2xl shadow-xl glass mb-12 mt-16">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-bold mb-4 text-blue-600">Construtor de Esqueleto Textual</h2>
+                <p class="text-xl text-stone-600">Selecione um gênero para visualizar sua estrutura e começar a organizar suas ideias</p>
+            </div>
             
-            <section id="interactive-tool" class="text-center bg-white p-8 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-bold mb-2">Construa o Esqueleto de seu Texto</h2>
-                <p class="text-stone-600 mb-6 max-w-2xl mx-auto">Selecione um gênero textual para ver sua estrutura básica e comece a organizar suas ideias.</p>
-                <div class="max-w-md mx-auto mb-6">
-                    <label for="genre-select" class="block mb-2 font-semibold text-lg text-left">1. Escolha o Gênero Textual:</label>
-                    <select id="genre-select" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="selecione" selected>Selecione...</option>
-                        <option value="conto">Conto</option>
-                        <option value="noticia">Notícia</option>
-                        <option value="opiniao">Artigo de Opinião</option>
-                        <option value="receita">Receita</option>
-                        <option value="ensaio">Ensaio Argumentativo</option>
-                    </select>
-                </div>
+            <div class="mb-10">
+                <label for="genre-select" class="block mb-4 font-semibold text-lg text-left">1. Escolha o Gênero Textual:</label>
+                <select id="genre-select" 
+                        class="w-full p-4 border border-stone-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none bg-white">
+                    <option value="selecione" selected>Selecione...</option>
+                    <option value="conto">Conto</option>
+                    <option value="noticia">Notícia</option>
+                    <option value="opiniao">Artigo de Opinião</option>
+                    <option value="receita">Receita</option>
+                    <option value="ensaio">Ensaio Argumentativo</option>
+                </select>
+            </div>
 
-                <div id="skeleton-container" class="text-left">
-                </div>
-            </section>
+            <div id="skeleton-container" 
+                 class="space-y-6 transition-all duration-300 ease-in-out"
+                 x-data="{ expanded: false }">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </section>
 
-        </main>
-
-        <footer class="text-center mt-12 pt-8 border-t border-stone-200">
-            <p class="text-stone-500">Guia Interativo desenvolvido a partir do projeto "A Arquitetura do Texto".</p>
+        <footer class="text-center text-stone-500 pb-8">
+            <p>Criado com ❤️ para escritores em formação</p>
         </footer>
-
     </div>
 
     <script>
-        const btnEf = document.getElementById('btn-ef');
-        const btnEm = document.getElementById('btn-em');
-        const contentEf = document.getElementById('content-ef');
-        const contentEm = document.getElementById('content-em');
-
         const genreSelect = document.getElementById('genre-select');
         const skeletonContainer = document.getElementById('skeleton-container');
-
-        let efChartInstance, emChartInstance;
-
+        
         const skeletons = {
             conto: {
                 'Situação Inicial': 'Apresente os personagens principais, o cenário (onde e quando) e a atmosfera inicial da história.',
@@ -122,122 +104,60 @@
             }
         };
 
-        function switchTab(activeBtn, inactiveBtn, activeContent, inactiveContent) {
-            activeBtn.classList.add('active');
-            inactiveBtn.classList.remove('active');
-            activeContent.classList.remove('hidden');
-            inactiveContent.classList.add('hidden');
-        }
-
-        btnEf.addEventListener('click', () => {
-            switchTab(btnEf, btnEm, contentEf, contentEm);
-        });
-
-        btnEm.addEventListener('click', () => {
-            switchTab(btnEm, btnEf, contentEm, contentEf);
-        });
-
         function generateSkeleton(genre) {
             skeletonContainer.innerHTML = '';
+            
             if (genre === 'selecione' || !skeletons[genre]) {
+                skeletonContainer.innerHTML = `
+                    <div class="text-center py-12 px-6 bg-blue-50 rounded-xl border border-blue-100">
+                        <p class="text-xl text-blue-700 font-medium">Escolha um gênero textual para começar</p>
+                        <p class="text-stone-500 mt-2">Sua estrutura aparecerá aqui automaticamente</p>
+                    </div>
+                `;
                 return;
             }
 
             const structure = skeletons[genre];
             const form = document.createElement('form');
-            form.className = 'space-y-4';
-
+            form.className = 'space-y-6';
+            
             Object.entries(structure).forEach(([title, description], index) => {
                 const div = document.createElement('div');
+                div.className = 'bg-white p-6 rounded-xl shadow-sm hover:shadow transition-shadow card-hover';
+                
                 const label = document.createElement('label');
                 label.htmlFor = `field-${index}`;
-                label.className = 'block font-semibold text-lg';
-                label.textContent = `${index + 2}. ${title}`;
-
+                label.className = 'block font-bold text-lg mb-2 text-blue-700';
+                label.textContent = title;
+                
                 const p = document.createElement('p');
-                p.className = 'text-sm text-stone-500 mb-2';
+                p.className = 'text-sm text-stone-500 mb-3';
                 p.textContent = description;
-
+                
                 const textarea = document.createElement('textarea');
                 textarea.id = `field-${index}`;
                 textarea.rows = '3';
-                textarea.className = 'w-full p-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500';
+                textarea.className = 'w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors';
                 textarea.placeholder = 'Comece a organizar suas ideias aqui...';
-
+                
                 div.appendChild(label);
                 div.appendChild(p);
                 div.appendChild(textarea);
                 form.appendChild(div);
             });
-
+            
             skeletonContainer.appendChild(form);
         }
 
         genreSelect.addEventListener('change', (e) => {
             generateSkeleton(e.target.value);
         });
-        
-        function createChart(canvasId, label, chartInstance) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            const data = {
-                labels: ['Etapa 1: Intro', 'Etapa 2: Mapeamento', 'Etapa 3: Montagem', 'Etapa 4: Apresentação'],
-                datasets: [{
-                    label: 'Distribuição de Tempo (min)',
-                    data: [20, 40, 40, 20],
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.7)',  // blue-500
-                        'rgba(16, 185, 129, 0.7)', // emerald-500
-                        'rgba(239, 68, 68, 0.7)',   // red-500
-                        'rgba(249, 115, 22, 0.7)',  // orange-500
-                    ],
-                    borderColor: [
-                        'rgba(59, 130, 246, 1)',
-                        'rgba(16, 185, 129, 1)',
-                        'rgba(239, 68, 68, 1)',
-                        'rgba(249, 115, 22, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            };
 
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-
-            return new Chart(ctx, {
-                type: 'doughnut',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed !== null) {
-                                        label += context.parsed + ' min';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
+        // Initialize with empty state
         window.onload = function () {
-            efChartInstance = createChart('ef-chart', 'Ensino Fundamental', efChartInstance);
-            emChartInstance = createChart('em-chart', 'Ensino Médio', emChartInstance);
+            generateSkeleton('selecione');
         }
-
     </script>
 </body>
 </html>
+```
